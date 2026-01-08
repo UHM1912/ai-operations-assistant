@@ -7,11 +7,13 @@ app = FastAPI(title="AI Operations Assistant")
 class Query(BaseModel):
     question: str
     customer_id: str | None = None
+    top_k: int = 10
 
 @app.post("/ask")
 def ask(query: Query):
     response = operations_agent(
         query.question,
         query.customer_id
+        top_k=query.top_k
     )
     return {"response": response}
