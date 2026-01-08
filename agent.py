@@ -5,6 +5,12 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_PATH = os.path.join(BASE_DIR, "data", "customer_risk_explanations.csv")
 
 data = pd.read_csv(DATA_PATH)
+import re
+
+def extract_top_n(user_query, default=10):
+    match = re.search(r'\btop\s+(\d+)', user_query.lower())
+    return int(match.group(1)) if match else default
+
 
 def understand_intent(query):
     query = query.lower()
@@ -106,6 +112,7 @@ def operations_agent(user_query, customer_id=None):
     """
     
     intent = understand_intent(user_query)
+    top_n = extract_top_n(user_query)
     analysis_result = run_analysis(intent, customer_id)
     
     # Explanation flow
