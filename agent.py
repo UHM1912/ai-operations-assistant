@@ -66,9 +66,7 @@ def generate_explanation(row):
     return explanation
 
 def suggest_actions(row):
-    """
-    Suggests operational actions based on identified risk drivers.
-    """
+   
     actions = []
     drivers = row["risk_drivers"].lower()
     
@@ -97,7 +95,6 @@ def format_response(customer_id, explanation, actions):
     return response
 
 def operations_agent(user_query, customer_id=None, top_k=10):
-  
     
     intent = understand_intent(user_query)
     top_n = extract_top_n(user_query)
@@ -114,8 +111,9 @@ def operations_agent(user_query, customer_id=None, top_k=10):
             analysis_result
             .sort_values(by="risk_score_lr", ascending=False)
             .head(top_k)
+            .to_dict(orient="records")
         )
-    
+
     
     elif intent == "RECOMMEND_ACTIONS":
         return "Focus immediately on high-risk customers with payment delays and repeated service issues."
