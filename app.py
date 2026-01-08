@@ -13,7 +13,7 @@ class Query(BaseModel):
 def ask(query: Query):
     response = operations_agent(
         query.question,
-        query.customer_id
+        query.customer_id,
         top_k=query.top_k
     )
     return {"response": response}
