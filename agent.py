@@ -5,13 +5,6 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_PATH = os.path.join(BASE_DIR, "data", "customer_risk_explanations.csv")
 
 data = pd.read_csv(DATA_PATH)
-import re
-
-def extract_top_n(user_query, default=10):
-    match = re.search(r'\btop\s+(\d+)', user_query.lower())
-    return int(match.group(1)) if match else default
-
-
 def understand_intent(query):
     query = query.lower()
     
@@ -94,9 +87,7 @@ def suggest_actions(row):
     return actions
 
 def format_response(customer_id, explanation, actions):
-    """
-    Formats the assistant response in a clean, readable manner.
-    """
+   
     response = f" Customer {customer_id} – Risk Assessment\n\n"
     response += explanation + "\n\nRecommended Actions:\n"
     
@@ -106,27 +97,26 @@ def format_response(customer_id, explanation, actions):
     return response
 
 def operations_agent(user_query, customer_id=None):
-    """
-    End-to-end agentic workflow:
-    Understand query → Run analysis → Explain → Recommend actions
-    """
+  
     
     intent = understand_intent(user_query)
     top_n = extract_top_n(user_query)
     analysis_result = run_analysis(intent, customer_id)
-    
-    # Explanation flow
+   
     if intent == "EXPLAIN_RISK" and not analysis_result.empty:
         row = analysis_result.iloc[0]
         explanation = generate_explanation(row)
         actions = suggest_actions(row)
         return format_response(customer_id, explanation, actions)
     
-    # List high-risk customers
     elif intent == "HIGH_RISK_CUSTOMERS":
-        return analysis_result.head(10)
+        return (
+            analysis_result
+            .sort_values(by="risk_score_lr", ascending=False)
+            .head(top_k)
+        )
     
-    # Action recommendation summary
+    
     elif intent == "RECOMMEND_ACTIONS":
         return "Focus immediately on high-risk customers with payment delays and repeated service issues."
     
