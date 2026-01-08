@@ -97,7 +97,6 @@ def format_response(customer_id, explanation, actions):
 def operations_agent(user_query, customer_id=None, top_k=10):
     
     intent = understand_intent(user_query)
-    top_n = extract_top_n(user_query)
     analysis_result = run_analysis(intent, customer_id)
    
     if intent == "EXPLAIN_RISK" and not analysis_result.empty:
