@@ -96,7 +96,7 @@ def format_response(customer_id, explanation, actions):
     
     return response
 
-def operations_agent(user_query, customer_id=None):
+def operations_agent(user_query, customer_id=None, top_k=10):
   
     
     intent = understand_intent(user_query)
