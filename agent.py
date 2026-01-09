@@ -18,38 +18,27 @@ def understand_intent(query):
         return "GENERAL_INSIGHT"
 
 def run_analysis(intent, customer_id=None):
-    """
-    Executes data analysis based on the intent identified by the agent.
-    Uses risk_score_lr (logistic regression–based risk score).
-    """
     
-    # Case 1: Identify customers needing immediate attention
+    
     if intent == "HIGH_RISK_CUSTOMERS":
         high_risk_customers = data[data["risk_bucket_lr"] == "High Risk"][
             ["customer_id", "risk_score_lr", "risk_bucket_lr", "risk_drivers"]
         ]
         return high_risk_customers
     
-    # Case 2: Explain why a specific customer is risky
     elif intent == "EXPLAIN_RISK" and customer_id is not None:
         customer_row = data[data["customer_id"] == customer_id]
         return customer_row
     
-    # Case 3: Recommend actions for today's operations
     elif intent == "RECOMMEND_ACTIONS":
         return data[data["risk_bucket_lr"] == "High Risk"]
     
-    # Fallback: Summary statistics
+
     else:
         return data.describe()
 
 def generate_explanation(row):
-    """
-    Generates a business-friendly explanation of customer risk
-    based on a weighted composite risk score derived from
-    logistic regression coefficients.
-    """
-    
+   
     customer_id = row["customer_id"]
     risk_level = row["risk_bucket_lr"]
     risk_score = round(row["risk_score_lr"], 2)
