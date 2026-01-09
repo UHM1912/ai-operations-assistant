@@ -5,6 +5,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_PATH = os.path.join(BASE_DIR, "data", "customer_risk_explanations.csv")
 
 data = pd.read_csv(DATA_PATH)
+
+# Intent Agent 
 def understand_intent(query):
     query = query.lower()
     
@@ -16,6 +18,8 @@ def understand_intent(query):
         return "RECOMMEND_ACTIONS"
     else:
         return "GENERAL_INSIGHT"
+
+# Analysis Agent
 
 def run_analysis(intent, customer_id=None):
     
@@ -36,6 +40,8 @@ def run_analysis(intent, customer_id=None):
 
     else:
         return data.describe()
+        
+# Explanation Agent
 
 def generate_explanation(row):
    
@@ -53,6 +59,7 @@ def generate_explanation(row):
     )
     
     return explanation
+# Action Agent
 
 def suggest_actions(row):
    
@@ -82,6 +89,7 @@ def format_response(customer_id, explanation, actions):
         response += f"{idx}. {action}\n"
     
     return response
+# Orchestrator Agent
 
 def operations_agent(user_query, customer_id=None, top_k=10):
     
